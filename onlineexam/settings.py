@@ -79,7 +79,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
     'NAME': 'exam',#使用数据库的名称
-    'USER':'root',#用户名
+    'USER':'root',#数据库的用户名
     'PASSWORD':'root',#密码
     'HOST':'127.0.0.1',#地址
     'PORT':'3306'#端口号
