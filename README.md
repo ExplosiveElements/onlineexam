@@ -34,7 +34,7 @@
 
 ## 项目代码分块
 
-- 建议在二次开发项目之前系统学习Django的基础知识！！！前端看看Jquery语法和Bootstrap、Bootstap Table和sweetalert2的用法！！（参考学习网址：Bootstap Table：http://www.itxst.com/bootstrap-table-methods/tutorial.html SweetAlert2：http://mishengqiang.com/sweetalert2/#ajax-request） 【一个免费的Bootstrap模板的网址：https://startbootstrap.com/ 】
+- 建议在二次开发项目之前系统学习Django的基础知识！！！前端看看Jquery语法和Bootstrap、Bootstap Table和sweetalert2的用法！！（参考学习网址：Bootstap Table：http://www.itxst.com/bootstrap-table-methods/tutorial.html SweetAlert2：http://mishengqiang.com/sweetalert2/#ajax-request ） 【一个免费的Bootstrap模板的网址：https://startbootstrap.com/ 】
 - onlineexam->templates存放项目中的所有html文件
 - onlineexam->static中存放项目中所有html需要引入的模块
 - onlineexam->onlineexam：
