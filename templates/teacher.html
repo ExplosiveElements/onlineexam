@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+{#     <link rel="icon" href="http://v3.bootcss.com/favicon.ico">#}
+
+    <link href="../static/bootstrap-4.3.1-dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 必须在引入bootstarp.js之前引入 -->
+    <link rel="stylesheet" href="../static/css/sweetalert2.css">
+    <link href="../static/bootstrap-4.3.1-dist/css/bootstrap-table.min.css" rel="stylesheet">
+    <script src="../static/js/sweetalert2.js"></script>
+    <script src="../static/jquery-3.3.1.min.js"></script>
+    <script src="../static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <script src="../static/bootstrap-4.3.1-dist/js/bootstrap-table.min.js"></script>
+    <script src="../static/bootstrap-4.3.1-dist/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../static/js/echarts.min.js"></script>
+      <script type="text/javascript">
+
+        $(document).ready(function(){
+
+            var data1=document.getElementById('x');
+            if(data1.innerHTML==='1'){
+                swal({
+                    text: '激活成功！',
+                    type: "success",
+                    confirm:'ok',
+                    confirmButtonColor: '#004dfd',
+                })
+            }
+            else if(data1.innerHTML==='2'){
+                 swal({
+                    text: '更改成功！',
+                    type: "success",
+                    confirm:'ok',
+                    confirmButtonColor: '#004dfd',
+                });
+            }
+            else if(data1.innerHTML==='3'){
+                swal({
+                    text: '登录成功',
+                    type: "success",
+                    confirm:'ok',
+                    confirmButtonColor: '#004dfd',
+                });
+            }else if(data1.innerHTML==='6'){
+                swal({
+                    text: '考试还没结束，你还不能查看试卷！',
+                    type: "warning",
+                    confirm:'ok',
+                    confirmButtonColor: '#ff0013',
+                });
+            }
+                function update(){
+                swal({
+                     title: '你确认要更改信息吗?',
+                    text: '更改后信息不能恢复！',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '是的，确认修改！',
+                    cancelButtonText: '不，保持不变。',
+                    confirmButtonColor: '#fd000e',
+                }).then(function(isConfirm){
+                    if (isConfirm === true){
+                    swal({
+                    title:'信息更改',
+                    html:
+                  '<form class="form-horizontal" action="/teacherActions/" method="post">'+
+								'<div class="form-group">'+
+									'<label for="sex">性别</label>'+
+                                   '<select class="form-control" name="sex" value="{{teacher.sex}}">'+
+			                            '<option>男</option>'+
+			                            '<option>女</option>'+
+                                    '</select>'+
+								'</div>'+
+
+								'<div class="form-group">'+
+									'<label for="password">密码</label>'+
+									'<input id="password" type="password" class="form-control " name="password" value="{{teacher.password}}" required >'+
+								'</div>'+
+
+                                '<div class="form-group">'+
+									'<label for="email">邮箱</label>'+
+									'<input id="email" type="email" class="form-control" name="email" value="{{teacher.email}}" required>'+
+
+								'</div>'+
+
+                                '<div class="form-group">'+
+									'<label for="birth">出生日期</label>'+
+									'<input id="bitth" type="date" class="form-control" name="birth" " required>'+
+
+								'</div>'+
+
+                                 '<div class="form-group">'+
+									'<label for="teaid_flag"></label>'+
+									'<input id="teaid_flag" type="radio"  name="teaid_flag" value="{{teacher.id}}-2" required>确认更改完成'+
+								'</div>'+
+                    '<div class="form-group m-0">'+
+									'<button type="submit" class="btn btn-primary btn-block ">'+
+										'提交'+
+									'</button>'+
+								'</div>'+'</form>',
+                        showConfirmButton: false,
+                })
+                    }
+                });
+                }
+                $("#updata").click(function(){
+                update();
+            });
+        });
+    </script>
+    <title>在线考试系统</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">教师页面</a>
+      <div >
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a   class="nav-link" href="#">{{teacher.name}}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout/">退出</a>
+          </li>
+            <li id='x' style="position: fixed; font-size: 0.0px;">{{falg}}</li>
+            <li id='teacherid' style="position: fixed; font-size: 10px ;">{{teacher.id}}</li>
+        </ul>
+      </div>
+    </div>
+</nav>
+<div class="container">
+  <br>
+<br>
+ <br>
+ <br>
+  <!-- Nav pills -->
+  <ul class="nav nav-pills" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="pill" href="#home">个人信息</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="pill" href="#menu1">成绩统计</a>
+    </li>
+    <li class="nav-item active">
+      <a class="nav-link" data-toggle="pill" href="#menu2">成绩查询</a>
+    </li>
+       <li class="nav-item active">
+      <a class="nav-link" data-toggle="pill" href="#menu3">题库管理</a>
+    </li>
+      <li class="nav-item">
+      <a class="nav-link" data-toggle="pill" href="#menu4">试卷管理</a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="home" class="container tab-pane active"><br>
+      <h3>个人信息</h3>
+        <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>属性</th>
+        <th>信息</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>教工号</td>
+        <td>{{ teacher.id }}</td>
+
+      </tr>
+      <tr >
+        <td>姓名</td>
+        <td>{{ teacher.name }}</td>
+
+      </tr>
+      <tr>
+        <td>性别</td>
+        <td>{{ teacher.sex }}</td>
+
+      </tr>
+      <tr>
+        <td>学院</td>
+        <td>{{ teacher.dept }}</td>
+
+      </tr>
+
+      <tr>
+        <td>邮箱地址</td>
+        <td>{{ teacher.email }}</td>
+
+      </tr>
+      <tr>
+        <td>出生日期</td>
+        <td>{{ teacher.birth }}</td>
+
+      </tr>
+
+    </tbody>
+  </table>
+        <button id="updata" class="btn btn-warning" >更改信息</button>
+    </div>
+    <div id="menu1" class="container tab-pane fade"><br>
+      <h4>试卷统计</h4>
+      <script>
+         function gradeanalysisfresh1(){
+                 $('#GradesAnalysis').bootstrapTable('refresh');
+     }
+        $(document).ready(function () {
+            $('#GradesAnalysis').bootstrapTable({
+                 idField:'id',
+                     url:'/getPapers/',
+                     method:'GET',
+                     toolbar:'#analysistoolbar',
+                     queryParams:function (params) {
+                var temp = {
+
+                    'teacherid':document.getElementById('teacherid').innerHTML
+                };
+                return temp;
+            }, pageSize:10,
+                     pagination:true,
+                     pageList: [10],
+                     search:true,
+                     columns:[
+                          {field: 'id',
+                    title: '试卷ID',},
+                         {field:'name',
+                         title:'试卷名字'},
+                         {field:'subject',
+                         title:'对应课程'},
+                         {field:'level',
+                         title:'难度等级'},
+                         {field:'examtime',
+                         title:'开考时间'},
+                        {field:'opreat',
+                         title:'操作',
+                             formatter: function (value, row) {
+         return [
+                '<a type="button" class="paperanalysis " style="margin-right:15px;">试卷统计</button>',
+         ]
+                .join('');
+    }, events:window.operatEvents = {
+            "click .paperanalysis" : function(e,value,row,index){
+         var teacherid = document.getElementById('teacherid').innerHTML;
+          window.location.href="/showGrade/?paper_id="+row.id+"&tea_id="+teacherid;
+
+            },
+
+    }
+                         }
+                     ]
+            })
+        })
+    </script>
+    <div class="gradetoolbar">
+            <button class="btn btn-info" onclick="gradeanalysisfresh1()">刷新</button>
+        </div>
+         <table id="GradesAnalysis"></table>
+        <script>
+            $(document).ready(function () {
+                var tample_html = '<label>学科选择</label><br><select  id="chart_subject" >';
+                var subjects = {{ subjects|safe }};
+                for(var i =0;i<subjects.length;i++){
+                    tample_html += '<option value="'+subjects[i]+'">'+subjects[i]+'</option>';
+                }
+                tample_html += '</select>';
+                document.getElementById('subject_select').innerHTML = tample_html;
+                function showsubject1() {
+                    var subject = $('#chart_subject').val();
+                    $.ajax({
+                        type : "post",
+                         url : "/subjectshow/",
+                        dataType : "json",
+                        data:{'subject':subject,
+                        'tid':document.getElementById('teacherid').innerHTML},
+                        success: function (e) {
+                            var myChart = echarts.init(document.getElementById('main3'));
+                            option = {
+                                 tooltip: {trigger:'axis',
+            },
+xAxis: {
+type: 'category',
+data: e.paper_name
+},
+yAxis: {
+type: 'value'
+},
+legend: {
+data: ['平均分', '最高分','最低分'],
+left: 'right'
+},
+series: [{
+name:'平均分',
+data: e.average,
+type: 'line',
+smooth: true
+},
+{
+name:'最高分',
+data: e.top,
+type: 'line',
+smooth: true
+},
+{
+name:'最低分',
+data: e.last,
+type: 'line',
+smooth: true
+}]
+};
+                            myChart.setOption(option);
+                        },
+
+                    })
+                }
+                $("#acting").click(function(){
+                showsubject1();
+            });
+            })
+
+        </script>
+        <br>
+        <h4>学科成绩走势</h4>
+        <br>
+        <div  id="subject_select"></div><br>
+        <button class="btn btn-success" id="acting">展开图示</button>
+        <div id="main3" style="width: 600px;height:400px;"></div>
+    </div>
+    <div id="menu2" class="container tab-pane fade"><br>
+      <h3>成绩查询</h3>
+    <script>
+         function gradefresh1(){
+                 $('#Grades').bootstrapTable('refresh');
+     }
+        $(document).ready(function () {
+            $('#Grades').bootstrapTable({
+                 idField:'id',
+                     url:'/queryStudent/',
+                     method:'GET',
+                     toolbar:'#gradetoolbar',
+                     queryParams:function (params) {
+                var temp = {
+
+                    'teacherid':document.getElementById('teacherid').innerHTML,
+                    'student_sex':$('#sex_search').val(),
+                    'student_id':$('#id_search').val(),
+                    'paper_name':$('#paper_name_search').val()
+                };
+                return temp;
+            }, pageSize:10,
+                     pagination:true,
+                     pageList: [10],
+                     search:true,
+                     columns:[
+                         {field: 'id',
+                    title: '学号',},
+                         {field:'name',
+                         title: '姓名'},
+                         {field:'subject',
+                         title:'科目'},
+                         {field:'major',
+                         title:'专业',
+                         },{field:'papername',
+                         title:'试卷名'},
+                         {field:'grade',
+                         title:'成绩'}]
+            })
+        })
+    </script>
+    <div class="gradetoolbar">
+        <div>
+            <label>性别</label>
+            <select id="sex_search" >
+                <option value="">--</option>
+                <option value="男">男</option>
+                <option value="女">女</option>
+            </select>
+        </div>
+            <input type="text" id="id_search" placeholder="学号">
+            <input type="text" id="paper_name_search" placeholder="试卷名">
+         <button class="btn btn-secondary" onclick="gradefresh1()">查询</button>
+        </div>
+         <table id="Grades"></table>
+
+    </div>
+    <div id="menu3" class="container tab-pane fade"><br>
+        <script>
+
+     function abilityrefresh1(){
+                 $('#Ability').bootstrapTable('refresh');
+     }
+     function questionrefresh1(){
+                 $('#Question').bootstrapTable('refresh');
+     }
+     function fillrefresh1(){
+                 $('#FillQuestion').bootstrapTable('refresh');
+     }
+
+     function questionadd(){
+
+         swal({
+                 title:'确认要新增选择题吗?',
+                 type: "info",
+                 confirmButtonColor: '#fd7235',
+                 showCancelButton: true,
+                    confirmButtonText: '是的，确认添加！',
+                    cancelButtonText: '不，不添加。',
+             }).then(function(isConfirm){
+                 if (isConfirm === true){
+                     var html_temp='<div class="form-group"><select class="form-control" id="question_subject" >';
+                     var subject_temp = $('#Ability').bootstrapTable('getData');
+                     for(var a=0;a<subject_temp.length;a++){
+                         var item = subject_temp[a];
+                         if(item.check1 === '是')
+                         {html_temp +='<option value="'+item.subject+'">'+item.subject+'</option>';}
+                     }
+                     html_temp += '</select></div>';
+                      swal({
+                            title:'请选择课程。',
+                          type:'info',
+                            html: html_temp,
+                            confirmButtonText: '确认提交！',
+                        }).then(function(isConfirm){
+                 if (isConfirm === true){
+                      var subject_select=$('#question_subject');
+                      var subject= subject_select.val();
+                      $.ajax({
+                          type: "POST",
+                          url: "/abilityshow/",
+                          dataType: "json",
+                          data: {'subject':subject
+                                    },
+                                    success: function (data1) {
+                              if(data1.flag==='2'){
+                                  var quaddhtml=
+                                  '<form class="form-horizontal" action="#" >'+
+								'<div class="form-group">'+
+									'<label for="question_ablity">能力评级设定</label>'+
+                                   '<select class="form-control" id ="question_ablity">';
+			                      for(var d=0;d<data1.abilitys.length;d++)
+                                  {
+                                       var item1 = data1.abilitys[d];
+                                       var e = d+1;
+                                       quaddhtml +='<option value="'+e+'">'+'能力等级'+e+'——'+'对应章节'+item1.chapter+'</option>'
+                                  }
+                                  quaddhtml+= '</select>'+
+								'</div>'+
+								'<div class="form-group">'+
+									'<label for="question_title">题目</label>'+
+									'<textarea id="question_title"  class="form-control" rows="7" cols="30">'+
+                                          '</textarea>'+
+								'</div>'+
+                                '<div class="form-group">'+
+									'<label for="question_optionA">A选项</label>'+
+									'<input id="question_optionA" type="text" class="form-control" maxlength="30">'+
+								'</div>'+
+                                          '<div class="form-group">'+
+									'<label for="question_optionB">B选项</label>'+
+									'<input id="question_optionB" type="text" class="form-control" maxlength="30">'+
+								'</div>'+
+                                          '<div class="form-group">'+
+									'<label for="question_optionC">C选项</label>'+
+									'<input id="question_optionC" type="text" class="form-control" maxlength="30">'+
+								'</div>'+
+                                          '<div class="form-group">'+
+									'<label for="question_optionD">D选项</label>'+
+									'<input id="question_optionD" type="text" class="form-control" maxlength="30">'+
+								'</div>'+
+                                '<div class="form-group">'+
+									'<label for="qusetion_answer">答案</label>'+
+									'<select class="form-control" id ="qusetion_answer" >'+
+                                           '<option value="A" selected>A</option>'+
+                                           '<option value="B">B</option>'+
+                                           '<option value="C">C</option>'+
+                                           '<option value="D">D</option>'+
+                                  '</select>'+
+                                  '<div class="form-group">'+
+									'<label for="qusetion_level">难度</label>'+
+									'<select class="form-control" id ="question_level" >'+
+                                           '<option value="1" selected>easy</option>'+
+                                           '<option value="2">normal</option>'+
+                                           '<option value="3">difficult</option>'+
+                                           '<option value="4">hard</option>'+
+                                          '<option value="5">hell</option>'+
+                                  '</select>'+
+                                  '</div>'+
+                                          '<div class="form-group">'+
+									'<label for="question_score">分数</label>'+
+									'<input id="question_score" type="text"  class="form-control" value="1" >'+
+								'</div>'+'</form>';
+			                    swal({
+                                     width: 500,
+                                    padding: 70,
+                                    title:subject+'选择题添加',
+                                    html:quaddhtml,
+                                }).then(function(isConfirm){
+                 if (isConfirm === true){
+                     $.ajax({
+                         type:"POST",
+                         url:"/questionadd/",
+                         dataType: "json",
+                         data:{
+                             'teacherid':document.getElementById('teacherid').innerHTML,
+                             'subject':subject,
+                             'ability':$('#question_ablity').val(),
+                             'title':$('#question_title').val(),
+                             'optionA':$('#question_optionA').val(),
+                             'optionB':$('#question_optionB').val(),
+                             'optionC':$('#question_optionC').val(),
+                             'optionD':$('#question_optionD').val(),
+                             'answer':$('#qusetion_answer').val(),
+                             'level':$('#question_level').val(),
+                             'score':$('#question_score').val(),
+                         },
+                         success:function (data1) {
+                              if(data1.flag==='1'){
+                                   swal({
+                                                title:'添加成功！',
+                                            type:'success',
+                                            confirmButtonColor: '#004dfd',
+                                            });
+                                            $('#Question').bootstrapTable('refresh');
+                              }},
+                              error:function () {
+                             swal({
+                                 title:'添加失败',
+                                 type:'error',
+                                 text:'您输入的格式有误，请按照要求输入。',
+                                 confirmButtonColor: '#ff0013',
+                             })
+                              }
+                     })
+                 }})
+
+
+
+                              }
+                                    }
+                          })
+                 }})
+
+                 }
+         })
+     }
+     function filladd(){
+          swal({
+                 title:'确认要新增填空题吗?',
+                 type: "info",
+                 confirmButtonColor: '#fd7235',
+                 showCancelButton: true,
+                    confirmButtonText: '是的，确认添加！',
+                    cancelButtonText: '不，不添加。',
+             }).then(function(isConfirm){
+                 if (isConfirm === true){
+                     var html_temp='<div class="form-group"><label for="fill_subject">科目</label><select class="form-control" id="fill_subject" >';
+                     var subject_temp = $('#Ability').bootstrapTable('getData');
+                     for(var a=0;a<subject_temp.length;a++){
+                         var item = subject_temp[a];
+                         if(item.check1 === '是')
+                         {html_temp +='<option value="'+item.subject+'">'+item.subject+'</option>';}
+                     }
+                     html_temp += '</select></div>';
+                     html_temp += '<div class="form-group">'+
+									'<label for="fill_count">空格数</label>'+
+									'<select class="form-control" id ="fill_count" >'+
+                                           '<option value="1">1</option>'+
+                                           '<option value="2">2</option>'+
+                                           '<option value="3">3</option>'+
+                                           '<option value="4">4</option>'+
+                                          '<option value="5">5</option>'+
+                                  '</select>'+
+								'</div>';
+                      swal({
+                            title:'请选择课程和空格数。',
+                            html: html_temp,
+                            confirmButtonText: '确认提交！',
+                        }).then(function(isConfirm){
+                 if (isConfirm === true){
+                      var subject_select=$('#fill_subject');
+                      var subject= subject_select.val();
+                      $.ajax({
+                          type: "POST",
+                          url: "/abilityshow/",
+                          dataType: "json",
+                          data: {'subject':subject
+                                    },
+                                    success: function (data1) {
+                              if(data1.flag==='2'){
+                                  var fill_count = $('#fill_count').val();
+                                  var fillddhtml=
+                                  '<form class="form-horizontal" action="#" >'+
+								'<div class="form-group">'+
+									'<label for="fill_ablity">能力评级设定</label>'+
+                                   '<select class="form-control" id ="fill_ablity">';
+			                      for(var d=0;d<data1.abilitys.length;d++)
+                                  {
+                                       var item1 = data1.abilitys[d];
+                                       var e = d+1;
+                                       fillddhtml +='<option value="'+e+'">'+'能力等级'+e+'——'+'对应章节'+item1.chapter+'</option>'
+                                  }
+                                  fillddhtml+= '</select>'+
+								'</div>'+
+								'<div class="form-group">'+
+									'<label for="fill_title">题目</label>'+
+									'<textarea id="fill_title"  class="form-control" rows="7" cols="30">'+
+                                          '</textarea>'+
+								'</div>';
+			                      for(var f=0;f<fill_count;f++){
+			                          var ff=f+1;
+			                          fillddhtml +='<div class="form-group">'+
+									'<label for="fill_answer'+ff+'">第'+ff+'空答案</label>'+
+									'<input id="fill_answer'+ff+'" type="text" class="form-control" maxlength="30">'+
+								'</div>';
+                                  }
+                                fillddhtml +=
+                                  '<div class="form-group">'+
+									'<label for="fill_level">难度</label>'+
+									'<select class="form-control" id ="fill_level" >'+
+                                           '<option value="1" selected >easy</option>'+
+                                           '<option value="2">normal</option>'+
+                                           '<option value="3">difficult</option>'+
+                                           '<option value="4">hard</option>'+
+                                          '<option value="5">hell</option>'+
+                                  '</select>'+
+                                  '</div>'+
+                                          '<div class="form-group">'+
+									'<label for="fill_order">空格填入是否有顺序</label>'+
+									'<select class="form-control" id ="fill_order" >'+
+                                           '<option value="1" selected >是</option>'+
+                                           '<option value="2">否</option>'+
+                                  '</select>'+
+								'</div>'+ '<div class="form-group">'+
+									'<label for="fill_score">分数</label>'+
+									'<input id="fill_score" type="text" placeholder="请输入数字" class="form-control" value="1">'+
+								'</div>'+
+                                    '</form>';
+			                    swal({
+                                     width: 500,
+                                    padding: 90,
+                                    title:subject+'填空题添加',
+                                    html:fillddhtml,
+                                }).then(function(isConfirm){
+                 if (isConfirm === true){
+                     $.ajax({
+                         type:"POST",
+                         url:"/filladd/",
+                         dataType: "json",
+                         data:{
+                             'teacherid':document.getElementById('teacherid').innerHTML,
+                             'subject':subject,
+                             'ability':$('#fill_ablity').val(),
+                             'title':$('#fill_title').val(),
+                             'count':fill_count,
+                             'answerA':$('#fill_answer1').val(),
+                             'answerB':$('#fill_answer2').val(),
+                             'answerC':$('#fill_answer3').val(),
+                             'answerD':$('#fill_answer4').val(),
+                             'answerE':$('#fill_answer5').val(),
+                             'level':$('#fill_level').val(),
+                             'order':$('#fill_order').val(),
+                             'score':$('#fill_score').val(),
+                         },
+                         success:function (data1) {
+                              if(data1.flag==='1'){
+                                   swal({
+                                                title:'添加成功！',
+                                            type:'success',
+                                            confirmButtonColor: '#004dfd',
+                                            });
+                                            $('#FillQuestion').bootstrapTable('refresh');
+                              }},
+                              error:function () {
+                             swal({
+                                 title:'添加失败',
+                                 type:'error',
+                                 text:'您输入的格式有误，请按照要求输入。',
+                                 confirmButtonColor: '#ff0013',
+                             })
+                              }
+                     })
+                 }})
+
+
+
+                              }
+                                    }
+                          })
+                 }})
+
+                 }
+         })
+     }
+     function questiondelete1(){
+         var rows = $('#Question').bootstrapTable('getSelections');
+          if(rows.length>0){
+          swal({
+                    title:'确认要删除所选的题目吗?',
+                 type: "warning",
+                 confirmButtonColor: '#fd7235',
+              text:"删除后无法恢复且已有试卷中的对应题目也将删除！！",
+                 showCancelButton: true,
+                    confirmButtonText: '是的，确认删除！',
+                    cancelButtonText: '不，不删除。',
+                }).then(function(isConfirm){
+                    if (isConfirm === true){
+                        var questions = '';
+                        for(var g=0;g<rows.length;g++)
+                        {
+                            questions += rows[g].id+':';
+                        }
+                    $.ajax({
+                                    type:"POST",
+                                    url:"/questionsdel/",
+                                    dataType:"json",
+                                    data:{
+                                        'qusetions':questions,
+                                        },
+                                    success:function (data1) {
+                                        if(data1.flag==='3'){
+                                            swal({
+                                                title:'删除成功！',
+                                            type:'success',
+                                            confirmButtonColor: '#004dfd',
+                                            });
+                                            $('#Question').bootstrapTable('refresh');
+                                        }
+                                    }
+                    })}
+            })}
+          else{
+              swal({
+                 title:'你没有选择任何题目，无法删除。',
+                 type: "warning",
+                 confirmButtonColor: '#fd7235',
+          })}
+     }
+     function filldelete1(){
+         var rows = $('#FillQuestion').bootstrapTable('getSelections');
+          if(rows.length>0){
+          swal({
+                    title:'确认要删除所选的题目吗?',
+                 type: "warning",
+                 confirmButtonColor: '#fd7235',
+              text:"删除后无法恢复且试卷中的对应题目也将删除！！",
+                 showCancelButton: true,
+                    confirmButtonText: '是的，确认删除！',
+                    cancelButtonText: '不，不删除。',
+                }).then(function(isConfirm){
+                    if (isConfirm === true){
+                        var fillquestions = '';
+                        for(var g=0;g<rows.length;g++)
+                        {
+                            fillquestions += rows[g].id+':';
+                        }
+                    $.ajax({
+                                    type:"POST",
+                                    url:"/fillquestionsdel/",
+                                    dataType:"json",
+                                    data:{
+                                        'fillqusetions':fillquestions,
+                                        },
+                                    success:function (data1) {
+                                        if(data1.flag==='3'){
+                                            swal({
+                                                title:'删除成功！',
+                                            type:'success',
+                                            confirmButtonColor: '#004dfd',
+                                            });
+                                            $('#FillQuestion').bootstrapTable('refresh');
+                                        }
+                                    }
+                    })}
+            })}
+          else{
+              swal({
+                 title:'你没有选择任何题目，无法删除。',
+                 type: "warning",
+                 confirmButtonColor: '#fd7235',
+          })}
+     }
+
+
+             $(document).ready(function(){
+                 $('#Ability').bootstrapTable({
+                     idField:'id',
+                     url:'/getAbilitys/',
+                     method:'GET',
+                     toolbar:'#abilitytoolbar',
+                     queryParams:function (params) {
+                var temp = {
+
+                    'teacherid':document.getElementById('teacherid').innerHTML
+                };
+                return temp;
+            },
+                     pageSize:10,
+                     pagination:true,
+                     pageList: [10],
+                     search:true,
+                     columns:[
+                         {field: 'id',
+                    title: 'ID',},
+                         {field:'subject',
+                         title:'课程'},
+                         {field:'check1',
+                         title:'是否有能力评级'},
+                         {field:'opreat',
+                         title:'操作',
+                             formatter: function (value, row) {
+         return [
+                '<a type="button" class="abilityadd " style="margin-right:15px;">新增评级</button>',
+                '<a type="button" class="abilitydel " style="margin-right:15px;">删除评级</button>',
+         '<a type="button" class="abilitysee" style="margin-right:15px;">查看评级</button>']
+                .join('');
+    }, events:window.operatEvents = {
+      "click .abilityadd" : function(e,value,row,index){
+         if(row.check1==='否'){
+             swal({
+                 title:'确认要新增能力评级吗?',
+                 type: "info",
+                 confirmButtonColor: '#fd7235',
+                 showCancelButton: true,
+                    confirmButtonText: '是的，确认添加！',
+                    cancelButtonText: '不，不添加。',
+             }).then(function(isConfirm){
+                    if (isConfirm === true){
+                        swal({
+                            title:'请输入能力评级的级数。',
+                            html:'<input type="text" class="form-control" placeholder="请输入数字" id="abilityadd1">',
+                            confirmButtonText: '确认提交！',
+                        }).then(function(isConfirm) {
+                            if (isConfirm === true) {
+
+                            var data1 = $('#abilityadd1').val();
+                            var html_contant = "";
+                            for (var i = 0; i < data1; i++) {
+                                var c = i + 1;
+                                html_contant += "<label>能力评级" + c + "：</labar><input type='text' placeholder='请输入章节' name='chapters'>"
+                            }
+                            swal({
+                                title: row.subject + '能力评级设计',
+                                html: html_contant,
+                                confirmButtonText: '提交！',
+                            }).then(function(isConfirm) {
+                            if (isConfirm === true) {
+                                var data2 = document.getElementsByName('chapters');
+                                var counts = '';
+                                for (var b = 0; b < data2.length; b++) {
+                                    counts += data2[b].value + ':';
+                                }
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/abilityadd/",
+                                    dataType: "json",
+                                    data: {
+                                        'subject': row.subject,
+                                        'chapters': counts,
+                                    },
+                                    success: function (data4) {
+                                        if(data4.flag==='4'){
+                                            swal({
+                                                title:'添加成功！',
+                                            type:'success',
+                                            confirmButtonColor: '#004dfd',
+                                            });
+                                            $('#Ability').bootstrapTable('refresh');
+                                        }
+                                    }
+                                })
+                            }});
+                        } })
+                    }
+             })
+         }
+         else{
+             swal({
+                 title:row.subject+'已经添加了能力评价，不能连续添加！',
+                 type: "warning",
+                 confirmButtonColor: '#fd7235',
+             })
+         }
+      },
+            "click .abilitydel" : function(e,value,row,index){
+          if(row.check1==='是'){
+          swal({
+                    title:'确认要删除'+row.subject+'的能力评级吗?',
+                 type: "warning",
+              html:'删除评级后:<br><b>1,评级数据无法恢复</b><br><b>2,已有的对应课程的题目的评级不会更改</b><br><b>3,已有的对应课程的题目将无法更改和出现在新的试卷中</b><b>4，已有试卷不受影响</b><br>',
+                 confirmButtonColor: '#fd7235',
+                 showCancelButton: true,
+                    confirmButtonText: '是的，确认删除！',
+                    cancelButtonText: '不，不删除。',
+                }).then(function(isConfirm){
+                    if (isConfirm === true){
+                    $.ajax({
+                                    type:"POST",
+                                    url:"/abilitydel/",
+                                    dataType:"json",
+                                    data:{
+                                        'subject':row.subject,
+                                        },
+                                    success:function (data1) {
+                                        if(data1.flag==='3'){
+                                            swal({
+                                                title:'删除成功！',
+                                            type:'success',
+                                            confirmButtonColor: '#004dfd',
+                                            });
+                                            $('#Ability').bootstrapTable('refresh');
+                                        }
+                                    }
+                    })}
+            })}
+          else{
+              swal({
+                 title:row.subject+'没有能力评级，不能进行删除操作！',
+                 type: "warning",
+                 confirmButtonColor: '#fd7235',
+          })}
+            },
+                    "click .abilitysee" : function(e,value,row,index){
+            if(row.check1==='是'){
+                    $.ajax({
+                                    type:"POST",
+                                    url:"/abilityshow/",
+                                    dataType:"json",
+                                    data:{
+                                        'subject':row.subject,
+                                        },
+                                    success:function (data1) {
+                                        if(data1.flag==='2'){
+                                             var html_contant = "";
+                            for (var i = 0;i<data1.abilitys.length;i++){
+                                var c= i+1;
+                                var item = data1.abilitys[i];
+                                html_contant +="<h4>能力评级"+c+"："+item.chapter+"</h4>"
+                            }
+                            swal({
+                                title:row.subject+'的能力评级',
+                                html:html_contant,
+                                confirmButtonColor: '#004dfd',
+                            });
+                                        }
+                                    }
+                    })
+            }
+          else{
+              swal({
+                 title:row.subject+'没有能力评级，不能进行查看操作！',
+                 type: "warning",
+                 confirmButtonColor: '#fd7235',
+          })}
+                    }
+    }
+                         }
+                     ]
+                 });
+
+                 $('#Question').bootstrapTable({
+                     idField: "id",
+                     search: true,
+                     url: '/questionDataGet/',
+                    method:'GET',
+                     toolbar: '#toolbar',
+                      queryParams:function (params) {
+                var temp = {
+
+                    'teacherid':document.getElementById('teacherid').innerHTML
+                };
+                return temp;
+            },
+                     pageSize:10,
+                     pagination:true,
+                     pageList: [10],
+                    columns: [{
+                checkbox: true
+            },
+                        {
+                    field: 'id',
+                    title: 'ID',
+
+                  }, {
+                    field: 'subject',
+                    title: '课程',
+                  }, {
+                    field: 'ability',
+                    title: '能力评级'
+                  },{
+                    field: 'chapter',
+                    title: '对应章节'
+                  },{
+                    field: 'title',
+                    title: '题目'
+                  },{
+                    field: 'optionA',
+                    title: 'A选项'
+                  },{
+                    field: 'optionB',
+                    title: 'B选项'
+                  },{
+                    field: 'optionC',
+                    title: 'C选项'
+                  },{
+                    field: 'optionD',
+                    title: 'D选项'
+                  },{
+                    field: 'answer',
+                    title: '答案'
+                  },{
+                    field: 'level',
+                    title: '难度等级'
+                  },{
+                    field: 'score',
+                    title: '分数'
+                  },{
+field: 'opreat',
+    title: '操作',
+    formatter: function (value, row) {
+         return [
+                '<a type="button" class="edit " style="margin-right:15px;">编辑</button>',
+                '<a type="button" class="del" style="margin-right:15px;">删除</button>' ]
+                .join('');
+    },
+    events:window.operatEvents = {
+      "click .edit" : function(e,value,row,index){
+          swal({
+                    title: '你确认要更改信息吗?',
+                    text: '更改后信息不能恢复！',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '是的，确认修改！',
+                    cancelButtonText: '不，保持不变。',
+                    confirmButtonColor: '#fd000e',
+                }).then(function(isConfirm){
+                  if (isConfirm === true){
+                      var ifcount = 0;
+                      var subject_temp = $('#Ability').bootstrapTable('getData');
+                      for( var e=0;e<subject_temp.length;e++){
+                          if (subject_temp[e].subject===row.subject){
+                              if(subject_temp[e].check1==='是')
+                              {ifcount +=1;}
+                          }
+                      }
+                      if(ifcount===0){
+                          swal({
+                 title:row.subject+'没有能力评级，不能进行编辑操作！',
+                 type: "warning",
+                 confirmButtonColor: '#fd7235',
+          })
+                      }
+                      else{
+                          $.ajax({
+                          type: "POST",
+                          url: "/abilityshow/",
+                          dataType: "json",
+                          data: {'subject':row.subject
+                                    },
+                                    success: function (data1) {
+                              if(data1.flag==='2') {
+                                var quaddhtml=
+                                  '<form class="form-horizontal" action="#" >'+
+								'<div class="form-group">'+
+									'<label for="question_ablity1">能力评级设定</label>'+
+                                   '<select class="form-control" id ="question_ablity1">';
+			                      for(var d=0;d<data1.abilitys.length;d++)
+                                  {
+                                       var item1 = data1.abilitys[d];
+                                       var e = d+1;
+                                       quaddhtml +='<option value="'+e+'">'+'能力等级'+e+'——'+'对应章节'+item1.chapter+'</option>'
+                                  }
+                                  quaddhtml+= '</select>'+
+                                          '<label style="color:#fd000e ">因为评级可能发生变化，请重新选择评级</label>'+
+								'</div>'+
+								'<div class="form-group">'+
+									'<label for="question_title1">题目</label>'+
+									'<textarea id="question_title1"  class="form-control" rows="7" cols="30" >'+
+                                          row.title+
+                                          '</textarea>'+
+								'</div>'+
+                                '<div class="form-group">'+
+									'<label for="question_optionA1">A选项</label>'+
+									'<input id="question_optionA1" type="text" class="form-control" maxlength="30"value="'+row.optionA+'">'+
+								'</div>'+
+                                          '<div class="form-group">'+
+									'<label for="question_optionB1">B选项</label>'+
+									'<input id="question_optionB1" type="text" class="form-control" maxlength="30" value="'+row.optionB+'">'+
+								'</div>'+
+                                          '<div class="form-group">'+
+									'<label for="question_optionC1">C选项</label>'+
+									'<input id="question_optionC1" type="text" class="form-control" maxlength="30" value="'+row.optionC+'">'+
+								'</div>'+
+                                          '<div class="form-group">'+
+									'<label for="question_optionD1">D选项</label>'+
+									'<input id="question_optionD1" type="text" class="form-control" maxlength="30" value="'+row.optionD+'">'+
+								'</div>'+
+                                '<div class="form-group">'+
+									'<label for="qusetion_answer1">新答案</label>'+
+									'<select class="form-control" id ="qusetion_answer1" >'+
+                                           '<option value="A">A</option>'+
+                                           '<option value="B">B</option>'+
+                                           '<option value="C">C</option>'+
+                                           '<option value="D">D</option>'+
+                                  '</select>'+
+                                          '<label for="qusetion_answer1">原答案为'+row.answer+'</label>'+
+                                          '</div>'+
+                                  '<div class="form-group">'+
+									'<label for="qusetion_level1">新难度</label>'+
+									'<select class="form-control" id ="question_level1" >'+
+                                           '<option value="1">easy</option>'+
+                                           '<option value="2">normal</option>'+
+                                           '<option value="3">difficult</option>'+
+                                           '<option value="4">hard</option>'+
+                                          '<option value="5">hell</option>'+
+                                  '</select>'+
+                                          '<label for="qusetion_answer1">原难度为'+row.level+'</label>'+
+                                  '</div>'+
+                                          '<div class="form-group">'+
+									'<label for="question_score1">分数</label>'+
+									'<input id="question_score1" type="text"  class="form-control" value="'+row.score+'" >'+
+								'</div>'+'</form>';
+			                    swal({
+                                     width: 500,
+                                    padding: 70,
+                                    title:row.subject+'选择题编辑',
+                                    html:quaddhtml,
+                                }).then(function(isConfirm){
+                 if (isConfirm === true){
+                     $.ajax({
+                         type:"POST",
+                         url:"/questionedit/",
+                         dataType: "json",
+                         data:{
+                             'id':row.id,
+                             'subject':row.subject,
+                             'ability':$('#question_ablity1').val(),
+                             'title':$('#question_title1').val(),
+                             'optionA':$('#question_optionA1').val(),
+                             'optionB':$('#question_optionB1').val(),
+                             'optionC':$('#question_optionC1').val(),
+                             'optionD':$('#question_optionD1').val(),
+                             'answer':$('#qusetion_answer1').val(),
+                             'level':$('#question_level1').val(),
+                             'score':$('#question_score1').val(),
+                         },
+                         success:function (data1) {
+                              if(data1.flag==='1'){
+                                   swal({
+                                                title:'编辑成功！',
+                                            type:'success',
+                                            confirmButtonColor: '#004dfd',
+                                            });
+                                            $('#Question').bootstrapTable('refresh');
+                              }},
+                              error:function () {
+                             swal({
+                                 title:'编辑失败',
+                                 type:'error',
+                                 text:'您输入的格式有误，请按照要求输入。',
+                                 confirmButtonColor: '#ff0013',
+                             })
+                              }
+                     })
+                 }})
+                              } }
+                          })
+                      }
+                  }
+          })
+      },
+            "click .del" : function(e,value,row,index){
+          swal({
+                    title:'确认要删除该题目吗?',
+                 type: "warning",
+                 confirmButtonColor: '#ff0013',
+              text:"删除后无法恢复！！",
+                 showCancelButton: true,
+                    confirmButtonText: '是的，确认删除！',
+                    cancelButtonText: '不，不删除。',
+                }).then(function(isConfirm){
+                    if (isConfirm === true){
+                        var questions = row.id+':';
+
+                    $.ajax({
+                                    type:"POST",
+                                    url:"/questionsdel/",
+                                    dataType:"json",
+                                    data:{
+                                        'qusetions':questions,
+                                        },
+                                    success:function (data1) {
+                                        if(data1.flag==='3'){
+                                            swal({
+                                                title:'删除成功！',
+                                            type:'success',
+                                            confirmButtonColor: '#004dfd',
+                                            });
+                                            $('#Question').bootstrapTable('refresh');
+                                        }
+                                    }
+                    })}
+            })
+            }
+    }
+
+}
+                    ],
+
+                });
+
+ $('#FillQuestion').bootstrapTable({
+                     idField: "id",
+                     search: true,
+                     url: '/fillQuestionDataGet/',
+                    method:'GET',
+                     toolbar: '#filltoolbar',
+      queryParams:function (params) {
+                var temp = {
+
+                    'teacherid':document.getElementById('teacherid').innerHTML
+                };
+                return temp;
+            },
+     pageSize:10,
+     pagination:true,
+     pageList: [10],
+                    columns: [{
+                checkbox: true
+            },
+                        {
+                    field: 'id',
+                    title: 'ID',
+
+                  }, {
+                    field: 'subject',
+                    title: '课程',
+                  }, {
+                    field: 'ability',
+                    title: '能力评级'
+                  },{
+                    field: 'chapter',
+                    title: '对应章节'
+                  },{
+                    field: 'title',
+                    title: '题目'
+                  },{
+                         field:'count',
+                            title:'空格数'
+                        },{
+                    field: 'answer1',
+                    title: '答案1'
+                  },{
+                    field: 'answer2',
+                    title: '答案2'
+                  },{
+                    field: 'answer3',
+                    title: '答案3'
+                  },{
+                    field: 'answer4',
+                    title: '答案4'
+                  },{
+                    field: 'answer5',
+                    title: '答案5'
+                  },{
+                    field: 'level',
+                    title: '难度等级'
+                  },{
+                         field:'order',
+                            title:'空格输入是否有序'
+                        },{
+                    field: 'score',
+                    title: '分数'
+                  },{
+field: 'opreat',
+    title: '操作',
+    formatter: function (value, row) {
+         return [
+                '<a type="button" class="filledit " style="margin-right:15px;">编辑</button>',
+                '<a type="button" class="filldel" style="margin-right:15px;">删除</button>' ]
+                .join('');
+    },
+    events:window.operatEvents = {
+      "click .filledit" : function(e,value,row,index){
+
+          swal({
+                 title:'确认要更改该填空题吗?',
+                 type: "warning",
+              text:'更改后信息不能恢复',
+                 confirmButtonColor: '#fd7235',
+                 showCancelButton: true,
+                    confirmButtonText: '是的，确认更改！',
+                    cancelButtonText: '不，不更改。',
+             }).then(function(isConfirm){
+                 if (isConfirm === true) {
+                     var ifcount = 0;
+                     var subject_temp = $('#Ability').bootstrapTable('getData');
+                     for (var e = 0; e < subject_temp.length; e++) {
+                         if (subject_temp[e].subject === row.subject) {
+                             if (subject_temp[e].check1 === '是') {
+                                 ifcount += 1;
+                             }
+                         }
+                     }
+                     if (ifcount === 0) {
+                         swal({
+                             title: row.subject + '没有能力评级，不能进行编辑操作！',
+                             type: "warning",
+                             confirmButtonColor: '#fd7235',
+                         })
+                     } else {
+
+                     var html_temp = '';
+                     html_temp += '<div class="form-horizontal">' +
+                         '<label for="fill_count1">空格数</label>' +
+                         '<select class="form-contro" id ="fill_count1" >' ;
+                     for(var b=1;b<6;b++){
+
+                        if(b===row.count){
+                            html_temp += '<option value="'+b+'" selected>'+b+'</option>';
+                        }
+                        else
+                        {
+                            html_temp += '<option value="'+b+'" >'+b+'</option>';
+                        }
+                     }
+                     html_temp += '</div>';
+                     swal({
+                         title: '重新选择或者保持原空格数。',
+                         html: html_temp,
+                         confirmButtonText: '确认提交！',
+                     }).then(function (isConfirm) {
+                         if (isConfirm === true) {
+                             $.ajax({
+                                 type: "POST",
+                                 url: "/abilityshow/",
+                                 dataType: "json",
+                                 data: {
+                                     'subject': row.subject
+                                 },
+                                 success: function (data1) {
+                                     if (data1.flag === '2') {
+                                         var fill_count = $('#fill_count1').val();
+                                         var fillddhtml =
+                                             '<form class="form-horizontal" action="#" >' +
+                                             '<div class="form-group">' +
+                                             '<label for="fill_ablity1">能力评级设定</label>' +
+                                             '<select class="form-control" id ="fill_ablity1">';
+                                         for (var d = 0; d < data1.abilitys.length; d++) {
+                                             var item1 = data1.abilitys[d];
+                                             var e = d + 1;
+                                             fillddhtml += '<option value="' + e + '">' + '能力等级' + e + '——' + '对应章节' + item1.chapter + '</option>'
+                                         }
+                                         fillddhtml += '</select>' +
+                                                 '<label style="color:#fd000e ">因为评级可能发生变化，请重新选择评级</label>'+
+                                             '</div>' +
+                                             '<div class="form-group">' +
+                                             '<label for="fill_title1">题目</label>' +
+                                             '<textarea id="fill_title1"  class="form-control" rows="7" cols="30">' +
+                                                 row.title+
+                                             '</textarea>' +
+                                             '</div>';
+                                         var answer_list = [];
+                                         answer_list.push(row.answer1);
+                                         answer_list.push(row.answer2);
+                                         answer_list.push(row.answer3);
+                                         answer_list.push(row.answer4);
+                                         answer_list.push(row.answer5);
+                                         for (var f = 0; f < fill_count; f++) {
+                                             var ff = f + 1;
+                                             fillddhtml += '<div class="form-group">' +
+                                                 '<label for="fill_1answer' + ff + '">第' + ff + '空答案</label>' +
+                                                 '<input id="fill_1answer' + ff + '" type="text" class="form-control" maxlength="30" value="'+answer_list[f]+'">' +
+                                                 '</div>';
+                                         }
+                                         fillddhtml +=
+                                             '<div class="form-group">' +
+                                             '<label for="fill_level1">难度</label>' +
+                                             '<select class="form-control" id ="fill_level1" ">' +
+                                             '<option value="1">easy</option>' +
+                                             '<option value="2">normal</option>' +
+                                             '<option value="3">difficult</option>' +
+                                             '<option value="4">hard</option>' +
+                                             '<option value="5">hell</option>' +
+                                             '</select>' +
+                                             '<label for="fill_level1">原本难度设定：'+row.level+'</label>' +
+                                             '</div>' +
+                                                  '<div class="form-group">'+
+									'<label for="fill_order1">空格填入是否有顺序</label>'+
+									'<select class="form-control" id ="fill_order1" >'+
+                                           '<option value="1" >是</option>'+
+                                           '<option value="2">否</option>'+
+                                  '</select>'+
+                                         '<label for="fill_order1">原本'+row.order+'</label>' +
+								'</div>'+
+                                             '<div class="form-group">' +
+                                             '<label for="fill_score1">分数</label>' +
+                                             '<input id="fill_score1" type="text" placeholder="请输入数字" class="form-control" value="'+row.score+'">' +
+                                             '</div>' + '</form>';
+                                         swal({
+                                             width: 500,
+                                             padding: 80,
+                                             title: row.subject + '填空题更改',
+                                             html: fillddhtml,
+                                         }).then(function (isConfirm) {
+                                             if (isConfirm === true) {
+                                                 $.ajax({
+                                                     type: "POST",
+                                                     url: "/filledit/",
+                                                     dataType: "json",
+                                                     data: {
+                                                         'id': row.id,
+                                                         'subject': row.subject,
+                                                         'ability': $('#fill_ablity1').val(),
+                                                         'title': $('#fill_title1').val(),
+                                                         'count': fill_count,
+                                                         'answerA': $('#fill_1answer1').val(),
+                                                         'answerB': $('#fill_1answer2').val(),
+                                                         'answerC': $('#fill_1answer3').val(),
+                                                         'answerD': $('#fill_1answer4').val(),
+                                                         'answerE': $('#fill_1answer5').val(),
+                                                         'level': $('#fill_level1').val(),
+                                                         'order':$('#fill_order1').val(),
+                                                         'score': $('#fill_score1').val(),
+                                                     },
+                                                     success: function (data1) {
+                                                         if (data1.flag === '1') {
+                                                             swal({
+                                                                 title: '编辑成功！',
+                                                                 type: 'success',
+                                                                 confirmButtonColor: '#004dfd',
+                                                             });
+                                                             $('#FillQuestion').bootstrapTable('refresh');
+                                                         }
+                                                     },
+                                                     error: function () {
+                                                         swal({
+                                                             title: '编辑失败',
+                                                             type: 'error',
+                                                             text: '您输入的格式有误，请按照要求输入。',
+                                                             confirmButtonColor: '#ff0013',
+                                                         })
+                                                     }
+                                                 })
+                                             }
+                                         })
+
+
+                                     }
+                                 }
+                             })
+                         }
+                     })
+
+                 } }
+         })
+      },
+            "click .filldel" : function(e,value,row,index){
+            swal({
+                    title:'确认要删除该题目吗?',
+                 type: "warning",
+                 confirmButtonColor: '#fd7235',
+              text:"删除后无法恢复！！",
+                 showCancelButton: true,
+                    confirmButtonText: '是的，确认删除！',
+                    cancelButtonText: '不，不删除。',
+                }).then(function(isConfirm){
+                    if (isConfirm === true){
+                        var fillquestions =row.id+ ':';
+                    $.ajax({
+                                    type:"POST",
+                                    url:"/fillquestionsdel/",
+                                    dataType:"json",
+                                    data:{
+                                        'fillqusetions':fillquestions,
+                                        },
+                                    success:function (data1) {
+                                        if(data1.flag==='3'){
+                                            swal({
+                                                title:'删除成功！',
+                                            type:'success',
+                                            confirmButtonColor: '#004dfd',
+                                            });
+                                            $('#FillQuestion').bootstrapTable('refresh');
+                                        }
+                                    }
+                    })}
+            })
+            }
+    }
+
+}
+                    ],
+
+                });
+
+
+                             })
+        </script>
+        <h3>能力评级</h3>
+        <div class="abilitytoolbar">
+            <button class="btn btn-info" onclick="abilityrefresh1()">刷新</button>
+        </div>
+         <table id="Ability"></table>
+        <h3>选择题库</h3>
+        <div class="toolbar">
+            <button class="btn btn-secondary" onclick="questionadd()" >新增</button>
+            <button class="btn btn-danger" onclick="questiondelete1()" >删除</button>
+            <button class="btn btn-info" onclick="questionrefresh1()">刷新</button>
+        </div>
+
+    <table id="Question"></table>
+        <h3>填空题库</h3>
+<div class="filltoolbar">
+            <button class="btn btn-secondary" onclick="filladd()" >新增</button>
+            <button class="btn btn-danger" onclick="filldelete1()" >删除</button>
+            <button class="btn btn-info" onclick="fillrefresh1()">刷新</button>
+        </div>
+         <table id="FillQuestion"></table>
+    </div>
+   <div id="menu4" class="container tab-pane fade"><br>
+       <script>
+           function paperfresh1(){
+                 $('#Papers').bootstrapTable('refresh');
+     }
+     function paperadd(){
+          swal({
+              title:'确认要组卷吗?',
+                 type: "info",
+                 confirmButtonColor: '#3a64fd',
+                 showCancelButton: true,
+                    confirmButtonText: '是的，确认组卷！',
+                    cancelButtonText: '不，不组卷。',
+                }).then(function(isConfirm){
+                    if (isConfirm === true){
+                        var subject_hutml = '<form class="form-horizontal" action="#" ><div class="form-group"><label for="paper_subject">课程选择</label><select class="form-control" id="paper_subject" >'
+                         var subject_temp = $('#Ability').bootstrapTable('getData');
+                     for(var a=0;a<subject_temp.length;a++){
+                         var item = subject_temp[a];
+                         if(item.check1 === '是')
+                         {subject_hutml +='<option value="'+item.subject+'">'+item.subject+'</option>';}
+                     }
+                     subject_hutml += '</select></div></from>';
+                     swal({
+                         title:'课程选择',
+                         html :subject_hutml,
+                         confirmButtonText:'确认提交！'
+                     }).then(function (isConfirm) {
+                         if(isConfirm){
+                             var paper_subject = $('#paper_subject').val();
+                             $.ajax({
+                                  type: "POST",
+                                 url: "/subject_number_get/",
+                                 dataType: "json",
+                                 data: {
+                                     'subject': paper_subject
+                                 },
+                                 success:function (data3) {
+                                      if(data3.flag==='1'){
+                                          var html_temp='<form class="form-horizontal" action="#" >';
+                     html_temp +='<div class="form-group"><label for="paper_number">'+paper_subject+'题目总数</label><input type="text" class="form-control" placeholder="请输入数字" id="paper_number"></div>';
+                     html_temp += '<label for="paper_number">该课程题目总数：'+data3.number+'</label><div class="form-group">'  +
+                         '<label for="paper_level1">难度</label>' +
+                         '<select class="form-control" id ="paper_level" ">' +
+                         '<option value="1">easy</option>' +
+                         '<option value="2">normal</option>'  +
+                         '<option value="3">difficult</option>'  +
+                         '<option value="4">hard</option>' +
+                         '<option value="5">hell</option>' +
+                         '</select>' +
+                         '</div>' +
+                             '<div class="form-group"><label for="paper_name">试卷名字</label><input type="text" class="form-control" id="paper_name"></div>'+
+                              '<div class="form-group"><label for="paper_extime">开考时间</label><input type="datetime-local" class="form-control" id="paper_extime"></div>'+
+                             '<div class="form-group"><label for="paper_overextime">收卷时间</label><input type="datetime-local" class="form-control" id="paper_overextime"></div>'+
+                         '</from>';
+                        swal({
+                           title:'试卷总体设计',
+                            html:html_temp,
+                            confirmButtonText: '确认提交！',
+                            padding:70,
+                        }).then(function (isConfirm) {
+                            if (isConfirm === true){
+                                var paper_number = parseInt($('#paper_number').val());
+                                var paper_level = $('#paper_level').val();
+                                var paper_name = $('#paper_name').val();
+                                var paper_extime = $('#paper_extime').val();
+                                var paper_overtime = $('#paper_overextime').val();
+                                $.ajax({
+                                 type: "POST",
+                                 url: "/type_number/",
+                                 dataType: "json",
+                                 data: {
+                                     'subject': paper_subject
+                                 },
+                                 success: function (data1) {
+                                     if (data1.flag === '2') {
+                                         var type_html = '<h4>试卷题目总数为'+paper_number+'</h4>'+'<form class="form-horizontal" action="#" >'+
+                                         '<div class="form-group">' +
+                                             '<label for="question_number">选择题题目数</label>' +
+                                             '<input type="text" class="form-control" placeholder="请输入数字" id="question_number">'+
+                                                 '<label>'+paper_subject+'选择题总数为'+data1.question_number+'</label></div>'+
+                                          '<div class="form-group">' +
+                                             '<label for="fillquestion_number">填空题题目数</label>' +
+                                             '<input type="text" class="form-control" placeholder="请输入数字" id="fillquestion_number">'+
+                                               '<label>'+paper_subject+'选择题总数为'+data1.fillquestion_number+'</label>'+'</div>'+
+                                             '</from>';
+                                         swal({
+                                             title:'题目类型分布设计',
+                                             html:type_html,
+                                             confirmButtonText: '确认提交！',
+                                             preConfirm: function() {
+                                            return new Promise(function(resolve,reject) {
+                                             var question_number = parseInt($('#question_number').val());
+                                                var fillquestion_number = parseInt($('#fillquestion_number').val());
+                                                var number_tample =question_number + fillquestion_number;
+                                            if (isNaN(question_number)||isNaN(fillquestion_number)) {
+                                               document.getElementById("tishi").innerHTML='请输入整数！';
+                                               reject();
+                                            }
+                                            else if(((fillquestion_number > data1.question_number)||(fillquestion_number < 0))||((question_number > data1.question_number)||(question_number < 0))){
+                                                document.getElementById("tishi").innerHTML='您输入的范围有误，请重新输入在0到各类型题目总数范围内';
+                                                reject();
+                                            }
+                                            else if(number_tample !== paper_number){
+                                                 document.getElementById("tishi").innerHTML='您输入的两个题目类型之和不等于题目总数，请重新输入！';
+                                                reject()}
+                                            else {
+                                            resolve();
+                                            }});}
+                                         }).then(function (isConfirm) {
+                                             if(isConfirm===true){
+                                                  var question_number = $('#question_number').val();
+                                                  var fillquestion_number = $('#fillquestion_number').val();
+                                                 $.ajax({
+                                                     type: "POST",
+                                 url: "/ability_numbers/",
+                                 dataType: "json",
+                                 data: {
+                                     'subject': paper_subject
+                                 },
+                                 success: function (data2) {
+                                     if (data2.flag === '1') {
+                                         var ability_number_html='<h4>考试科目'+paper_subject+'</h4>'+'<h4>试卷题目总数为'+paper_number+'</h4>'+'<form class="form-horizontal" action="#" >';
+                                         for(var a=0;a<data2.abilitys.length;a++){
+                                             var aa=a+1;
+                                             ability_number_html += '<div class="form-group">' +
+                                             '<label for="ability_number">能力评级'+aa+'</label>' +
+                                             '<input type="text" class="form-control" placeholder="请输入数字" name="ability_number">'+
+                                                 '<label>能力评级'+aa+'的题目总数为'+data2.abilitys[a].numbers+'</label></div>';
+                                         }
+                                         ability_number_html += '<h5 id="tishi1" style="color: #dc3545"></h5>'+
+                                             '</from>';
+                                         swal({
+                                             title:'能力评级分布设计',
+                                             html:ability_number_html,
+                                             padding:80,
+                                             preConfirm: function() {
+                                            return new Promise(function(resolve,reject) {
+                                             var ability_numbers = document.getElementsByName('ability_number');
+                                             var c=0;
+                                             var u=0;
+                                             for(var b=0;b<ability_numbers.length;b++){
+                                                 var item = parseInt(ability_numbers[b].value);
+                                                 if((item>data2.abilitys[b].numbers)||(item<0))
+                                                 {
+                                                     u +=1;
+                                                 }
+                                                 c +=item;
+                                             }
+                                             if(isNaN(c)){
+                                                 document.getElementById("tishi1").innerHTML='请输入整数！';
+                                               reject();
+                                             }else if(u !==0){
+                                                  document.getElementById("tishi1").innerHTML='您输入的范围有误，请重新输入在0到各评级题目总数范围内';
+                                                reject();
+                                             }
+                                             else if(c!==paper_number){
+                                                  document.getElementById("tishi1").innerHTML='您输入的'+ability_numbers.length+'个评级题目之和不等于题目总数，请重新输入！';
+                                                reject();
+                                             }
+                                             else {
+                                                 resolve();
+                                             }
+                                            });}
+                                         }).then(function (isConfirm) {
+                                             if(isConfirm===true){
+                                                 var ability_numbers = document.getElementsByName('ability_number');
+                                                 var ability_number_str = '';
+                                             for(var g=0;g<ability_numbers.length;g++){
+                                                 ability_number_str += ability_numbers[g].value+':';
+                                             }
+                                                 $.ajax({
+                                                     type:'POST',
+                                                     url: "/paperadd/",
+                                 dataType: "json",
+                                 data: {
+                                     'paper_subject': paper_subject,
+                                     'paper_number':paper_number,
+                                     'question_number':question_number,
+                                     'fillquestion_number':fillquestion_number,
+                                     'ability_numbers_str': ability_number_str,
+                                     'paper_name': paper_name,
+                                     'paper_level':paper_level,
+                                     'paper_teacher':document.getElementById('teacherid').innerHTML,
+                                     'paper_extime':paper_extime,
+                                     'paper_overtime':paper_overtime,
+                                 },
+                                 success: function (data3) {
+                                     if (data3.flag === 1) {
+                                         swal({
+                                             title:'组卷成功',
+                                             type:'success',
+                                         });
+                                         $('#Papers').bootstrapTable('refresh');
+                                     }}
+                                                 })
+                                             }
+                                         })
+                                     }}
+                                                 })
+                                             }
+                                         });
+                                     }}})
+                            }
+                        })
+                                      }
+
+                                 }
+                             })
+                         }
+                     });
+
+
+
+                    }})
+     }
+     function paperdel(){
+               var rows = $('#Papers').bootstrapTable('getSelections');
+          if(rows.length>0){
+          swal({
+                    title:'确认要删除所选的试卷吗?',
+                 type: "warning",
+                 confirmButtonColor: '#fd7235',
+              html:'删除试卷后:<br><b>1,试卷数据无法恢复</b><br><b>2,已有的对应试卷的学生的成绩和成绩分析也将删除</b>',
+                 showCancelButton: true,
+                    confirmButtonText: '是的，确认删除！',
+                    cancelButtonText: '不，不删除。',
+                }).then(function(isConfirm){
+                    if (isConfirm === true){
+                        var papers = '';
+                        for(var g=0;g<rows.length;g++)
+                        {
+                            papers += rows[g].id+':';
+                        }
+                    $.ajax({
+                                    type:"POST",
+                                    url:"/paperdel/",
+                                    dataType:"json",
+                                    data:{
+                                        'papers':papers,
+                                        },
+                                    success:function (data1) {
+                                        if(data1.flag==='3'){
+                                            swal({
+                                                title:'删除成功！',
+                                            type:'success',
+                                            confirmButtonColor: '#004dfd',
+                                            });
+                                            $('#Papers').bootstrapTable('refresh');
+                                        }
+                                    }
+                    })}
+            })}
+          else{
+              swal({
+                 title:'你没有选择任何题目，无法删除。',
+                 type: "warning",
+                 confirmButtonColor: '#fd7235',
+          })}
+     }
+         $(document).ready(function(){
+                 $('#Papers').bootstrapTable({
+                     idField:'id',
+                     url:'/getPapers/',
+                     method:'GET',
+                     toolbar:'#papertoolbar',
+                     queryParams:function (params) {
+                var temp = {
+
+                    'teacherid':document.getElementById('teacherid').innerHTML
+                };
+                return temp;
+            },
+                     pageSize:10,
+                     pagination:true,
+                     pageList: [10],
+                     search:true,
+                     columns:[{checkbox:true},
+                         {field: 'id',
+                    title: '试卷ID',},
+                         {field:'name',
+                         title:'试卷名字'},
+                         {field:'subject',
+                         title:'对应课程'},
+                         {field:'level',
+                         title:'难度等级'},
+                         {field:'examtime',
+                         title:'开考时间'},
+                         {field:'overtime',
+                         title:'收卷时间'},
+                         {field:'opreat',
+                         title:'操作',
+                             formatter: function (value, row) {
+         return [
+                '<a type="button" class="paperdel " style="margin-right:15px;">删除试卷</button>',
+         '<a type="button" class="papersee" style="margin-right:15px;">查看试卷</button>']
+                .join('');
+    }, events:window.operatEvents = {
+            "click .paperdel" : function(e,value,row,index){
+          swal({
+                    title:'确认要删除试卷'+row.name+'吗?',
+                 type: "warning",
+              html:'删除试卷后:<br><b>1,试卷数据无法恢复</b><br><b>2,已有的对应试卷的学生的成绩和成绩分析也将删除</b>',
+                 confirmButtonColor: '#fd7235',
+                 showCancelButton: true,
+                    confirmButtonText: '是的，确认删除！',
+                    cancelButtonText: '不，不删除。',
+                }).then(function(isConfirm){
+                    if (isConfirm === true){
+                        var papers = row.id + ":";
+                    $.ajax({
+                                    type:"POST",
+                                    url:"/paperdel/",
+                                    dataType:"json",
+                                    data:{
+                                        'papers':papers,
+                                        },
+                                    success:function (data1) {
+                                        if(data1.flag==='3'){
+                                            swal({
+                                                title:'删除成功！',
+                                            type:'success',
+                                            confirmButtonColor: '#004dfd',
+                                            });
+                                            $('#Papers').bootstrapTable('refresh');
+                                        }
+                                    }
+                    })}
+            })
+
+            },
+                    "click .papersee" : function(e,value,row,index){
+                   window.location.href="/papershow/?paper_id="+row.id;
+                    }
+    }
+                         }
+                     ]
+                 });})
+                 </script>
+       <h3>试卷库</h3>
+        <div class="papertoolbar">
+            <button class="btn btn-info" onclick="paperfresh1()">刷新</button>
+            <button class="btn btn-secondary" onclick="paperadd()">组卷</button>
+            <button class="btn btn-danger" onclick="paperdel()">删除</button>
+        </div>
+         <table id="Papers"></table>
+   </div>
+  </div>
+</div>
+</body>
+</html>

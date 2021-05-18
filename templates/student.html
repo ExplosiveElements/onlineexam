@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+{#    <link rel="icon" href="http://v3.bootcss.com/favicon.ico">#}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../static/bootstrap-4.3.1-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/bootstrap-4.3.1-dist/css/bootstrap-table.min.css" rel="stylesheet">
+    <!-- 必须在引入bootstarp.js之前引入 -->
+    <link rel="stylesheet" href="../static/css/sweetalert2.css">
+    <script src="../static/js/sweetalert2.js"></script>
+    <script src="../static/jquery-3.3.1.min.js"></script>
+    <script src="../static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <script src="../static/bootstrap-4.3.1-dist/js/bootstrap-table.min.js"></script>
+    <script src="../static/js/echarts.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var data1=document.getElementById('x');
+            if(data1.innerHTML==='1'){
+                swal({
+                    text: '激活成功！',
+                    type: "success",
+                    confirm:'ok',
+                    confirmButtonColor: '#004dfd',
+                })
+            }
+            else if(data1.innerHTML==='2'){
+                 swal({
+                    text: '更改成功！',
+                    type: "success",
+                    confirm:'ok',
+                    confirmButtonColor: '#004dfd',
+                });
+            }
+            else if(data1.innerHTML==='3'){
+                swal({
+                    text: '登录成功',
+                    type: "success",
+                    confirm:'ok',
+                    confirmButtonColor: '#004dfd',
+                });
+            }
+            else if(data1.innerHTML==='5'){
+                swal({
+                    text:'你已经错过考试。请联系老师说明情况。',
+                    type:'warning',
+                    confirmButtonColor:'#fd3500'
+                });
+            }
+            else if(data1.innerHTML==='6'){
+                swal({
+                    text:'考试还没开始！',
+                    type:'warning',
+                    confirmButtonColor:'#fd3500'
+                });
+            }
+               else if(data1.innerHTML==='7'){
+                swal({
+                    text:'你的这场考试已经结束！',
+                    type:'warning',
+                    confirmButtonColor:'#fd3500'
+                });
+            }
+                function update(){
+                swal({
+                     title: '你确认要更改信息吗?',
+                    text: '更改后信息不能恢复！',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '是的，确认修改！',
+                    cancelButtonText: '不，保持不变。',
+                    confirmButtonColor: '#fd000e',
+                }).then(function(isConfirm){
+                    if (isConfirm === true){
+                    swal({
+                    title:'信息更改',
+                    html:
+                  '<form class="form-horizontal" action="/studentActions/" method="post">'+
+								'<div class="form-group">'+
+									'<label for="sex">性别</label>'+
+                                   '<select class="form-control" name="sex" value="{{student.sex}}">'+
+			                            '<option>男</option>'+
+			                            '<option>女</option>'+
+                                    '</select>'+
+								'</div>'+
+
+								'<div class="form-group">'+
+									'<label for="password">密码</label>'+
+									'<input id="password" type="password" class="form-control " name="password" value="{{student.password}}" required >'+
+								'</div>'+
+
+                                '<div class="form-group">'+
+									'<label for="email">邮箱</label>'+
+									'<input id="email" type="email" class="form-control" name="email" value="{{student.email}}" required>'+
+
+								'</div>'+
+
+                                '<div class="form-group">'+
+									'<label for="birth">出生日期</label>'+
+									'<input id="bitth" type="date" class="form-control" name="birth" " required>'+
+
+								'</div>'+
+
+                                 '<div class="form-group">'+
+									'<label for="stuid_flag"></label>'+
+									'<input id="stuid_flag" type="radio"  name="stuid_flag" value="{{student.id}}-2" required>确认更改完成'+
+								'</div>'+
+                    '<div class="form-group m-0">'+
+									'<button type="submit" class="btn btn-primary btn-block ">'+
+										'提交'+
+									'</button>'+
+								'</div>',
+                        showConfirmButton: false,
+                })
+                    }
+                });
+                }
+                $("#updata").click(function(){
+                update();
+            });
+        });
+    </script>
+    <title>在线考试系统</title>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">学生页面</a>
+      <div >
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">{{student.name}}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout/">退出</a>
+          </li>
+            <li id='x' style="position: fixed; font-size: 0.0px;">{{flag}}</li>
+              <li id='stuid' style="position: fixed; font-size: 0.0px;">{{student.id}}</li>
+        </ul>
+      </div>
+    </div>
+</nav>
+
+<div class="container">
+
+  <br>
+ <br>
+ <br>
+ <br>
+  <!-- Nav pills -->
+  <ul class="nav nav-pills nav-stacked" >
+    <li class="nav-item">
+      <a class="nav-link active " data-toggle="pill" href="#home">个人信息</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="pill" href="#menu1">考试信息</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="pill" href="#menu2">考试成绩</a>
+    </li>
+
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content table-responsive">
+    <div id="home" class="container tab-pane active"><br>
+      <h3>个人信息</h3>
+        <table class="table table-striped ">
+    <thead>
+      <tr>
+        <th>属性</th>
+        <th>信息</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>学号</td>
+        <td>{{ student.id }}</td>
+
+      </tr>
+      <tr>
+        <td>姓名</td>
+        <td>{{ student.name }}</td>
+      </tr>
+
+      <tr >
+        <td>性别</td>
+        <td>{{ student.sex }}</td>
+
+      </tr>
+      <tr >
+        <td>学院</td>
+        <td>{{ student.dept }}</td>
+
+      </tr>
+
+       <tr>
+        <td>专业</td>
+        <td>{{ student.major }}</td>
+
+      </tr>
+
+      <tr >
+        <td>邮箱地址</td>
+        <td>{{ student.email }}</td>
+
+      </tr>
+      <tr >
+        <td>出生日期</td>
+        <td>{{ student.birth }}</td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+        <button id="updata"  class="btn btn-warning" >更改信息</button>
+
+    </div>
+
+    <div id="menu1" class="container tab-pane fade"><br>
+      <h3>考试信息</h3>
+       <script>
+         function gradeanalysisfresh1(){
+                 $('#Papers').bootstrapTable('refresh');
+     }
+        $(document).ready(function () {
+            $('#Papers').bootstrapTable({
+                 idField:'id',
+                     url:'/stugetPapers/',
+                     method:'GET',
+                     toolbar:'#analysistoolbar',
+                     queryParams:function (params) {
+                var temp = {
+
+                     'stuid':document.getElementById('stuid').innerHTML
+                };
+                return temp;
+            }, pageSize:10,
+                     pagination:true,
+                     pageList: [10],
+                     search:true,
+                     columns:[
+                          {field: 'id',
+                    title: '试卷ID',},
+                         {field:'name',
+                         title:'试卷名字'},
+                         {field:'subject',
+                         title:'对应课程'},
+                         {field:'level',
+                         title:'难度等级'},
+                         {field:'examtime',
+                         title:'开考时间'},
+                         {field:'overtime',
+                         title:'收卷时间'},
+                         {field:'teacher_name'
+                             ,title:'命题老师'},
+                        {field:'opreat',
+                         title:'操作',
+                             formatter: function (value, row) {
+         return [
+                '<a type="button" class="examstart " style="margin-right:15px;">开始考试</button>',
+         ]
+                .join('');
+    }, events:window.operatEvents = {
+            "click .examstart" : function(e,value,row,index){
+         var stuid = document.getElementById('stuid').innerHTML;
+          window.location.href="/startExam/?sid="+stuid+"&paper_id="+row.id;
+            },
+
+    }
+                         }
+                     ]
+            })
+        })
+    </script>
+    <div class="gradetoolbar">
+            <button class="btn btn-info" onclick="gradeanalysisfresh1()">刷新</button>
+        </div>
+         <table id="Papers"></table>
+    </div>
+
+    <div id="menu2" class="container tab-pane fade"><br>
+      <h3>考试成绩</h3>
+     <script>
+         function gradefresh1(){
+                 $('#Grades').bootstrapTable('refresh');
+     }
+        $(document).ready(function () {
+            $('#Grades').bootstrapTable({
+                 idField:'id',
+                     url:'/stugradesget/',
+                     method:'GET',
+                     toolbar:'#gradetoolbar',
+                     queryParams:function (params) {
+                var temp = {
+
+                    'stuid':document.getElementById('stuid').innerHTML
+                };
+                return temp;
+            }, pageSize:10,
+                     pagination:true,
+                     pageList: [10],
+                     search:true,
+                     columns:[
+                         {field: 'id',
+                    title: '试卷号',},
+                         {field:'teacher_name',
+                         title: '出卷人'},
+                         {field:'subject',
+                         title:'科目'},
+                         {field:'papername',
+                         title:'试卷名'},
+                         {field:'grade',
+                         title:'成绩'}]
+            })
+        })
+    </script>
+    <div class="gradetoolbar">
+            <button class="btn btn-info" onclick="gradefresh1()">刷新</button>
+        </div>
+         <table id="Grades"></table>
+
+ <script>
+            $(document).ready(function () {
+                var tample_html = '<label>学科选择</label><br><select  id="chart_subject" >';
+                var subjects = {{ subjects|safe }};
+                for(var i =0;i<subjects.length;i++){
+                    tample_html += '<option value="'+subjects[i]+'">'+subjects[i]+'</option>';
+                }
+                tample_html += '</select>';
+                document.getElementById('subject_select').innerHTML = tample_html;
+                function showsubject1() {
+                    var subject = $('#chart_subject').val();
+                    $.ajax({
+                        type : "post",
+                         url : "/studentssubjectshow/",
+                        dataType : "json",
+                        data:{'subject':subject,
+                        'sid':document.getElementById('stuid').innerHTML},
+                        success: function (e) {
+                            var myChart = echarts.init(document.getElementById('main3'));
+                            option = {
+                                 tooltip: {trigger:'axis',
+            },
+xAxis: {
+type: 'category',
+data: e.paper_name
+},
+yAxis: {
+type: 'value'
+},
+legend: {
+data: '分数',
+left: 'right'
+},
+series: [{
+name:'分数',
+data: e.grades,
+type: 'line',
+smooth: true
+},
+]
+};
+                            myChart.setOption(option);
+                        },
+
+                    })
+                }
+                $("#acting").click(function(){
+                showsubject1();
+            });
+            })
+
+        </script>
+        <br>
+        <h4>学科成绩走势</h4>
+        <br>
+        <div  id="subject_select"></div><br>
+        <button class="btn btn-success" id="acting">展开图示</button>
+        <div id="main3" style="width: 600px;height:400px;"></div>
+
+    </div>
+  </div>
+</div>
+

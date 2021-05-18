@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>在线考试系统</title>.
+    <link href="../static/bootstrap-4.3.1-dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- 必须在引入bootstarp.js之前引入 -->
+    <script src="../static/jquery-3.3.1.min.js"></script>
+    <script src="../static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <script src="../static/js/jquery.downCount.js"></script>
+    <!--时间js-->
+    <link href="../static/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../static/css/test.css" rel="stylesheet" type="text/css" />
+      <style type="text/css">
+        .test_time li {
+              display: inline;
+              list-style:none;
+            font-size:20px;
+        }
+    </style>
+
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#"><h3>在线答题考试页面</h3></a>
+      <div >
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#"><h4>{{student.name}}</h4>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<br>
+<nav class="navbar navbar-expand-sm bg-light navbar-light ">
+
+    <ul class="navbar-nav">
+        <li class="nav-item active">
+            <a class="nav-link"><h2>{{ paper.name }}</h2></a>
+        </li>
+    </ul>
+    <ul class="navbar-brand ml-auto">
+        <li class="nav-item active">
+            <a class="nav-link"><h4>当前科目:{{ subject }}</h4></a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link"><h4>命题老师:{{ paper.tid.name }}</h4></a>
+        </li>
+        <li id="overtime" style="position: fixed; font-size: 0.0px;">{{over_time}}</li>
+    </ul>
+
+
+</nav>
+<div class="main">
+	<!--nr start-->
+	<div class="test_main">
+		<div class="nr_left">
+			<div class="test">
+				<form action="/calGrade/" method="post">
+                <input type="hidden" name="sid" value="{{ student.id }}">
+                <input type="hidden" name="paper_id" value="{{ paper.id }}">
+					<div class="test_title">
+                         <ul class="countdown test_time">
+        <li class="test_time"> <span class="hours">00</span>
+        </li>
+        <li class="seperator test_time">:</li>
+        <li class="test_time"> <span class="minutes">00</span>
+        </li>
+        <li class="seperator test_time">:</li>
+        <li class="test_time"> <span class="seconds">00</span>
+        </li>
+    </ul>
+                        <font><button type="submit" name="tijiao" >交卷</button>></font>
+					</div>
+
+						<div class="test_content">
+							<div class="test_content_title">
+								<h2>单选题</h2>
+								<p>
+									<span>共</span><i class="content_lit">{{ques_count}}</i><span>题，</span>
+                                    <span>合计</span><i class="content_fs">{{ques_grade}}</i><span>分</span>
+								</p>
+							</div>
+						</div>
+						<div class="test_content_nr">
+							<ul>
+
+                                   {% for test in paper.qid.all %}
+                                       <li id="{{ forloop.counter }}">
+                                        <div class="test_content_nr_tt">
+											<i>{{ forloop.counter}}</i><span>({{ test.score }}分)</span>
+                                            <font>{{ test.title }}</font>
+
+										</div>
+                                       <div class="test_content_nr_main">
+											<ul>
+													<li class="option">
+															<input type="radio" class="radioOrCheck" name="{{ test.id }}" value="A">
+														<label>A.
+                                                            <p class="ue" style="display: inline;">{{ test.optionA }}</p>
+														</label>
+													</li>
+
+													<li class="option">
+															<input type="radio" class="radioOrCheck" name="{{ test.id }}" value="B">
+														<label>
+															B.<p class="ue" style="display: inline;">{{ test.optionB }}</p>
+														</label>
+													</li>
+
+													<li class="option">
+															<input type="radio" class="radioOrCheck" name="{{ test.id }}" value="C">
+														<label>
+															C.<p class="ue" style="display: inline;">{{ test.optionC }}</p>
+														</label>
+													</li>
+
+													<li class="option">
+															<input type="radio" class="radioOrCheck" name="{{ test.id }}" value="D">
+														<label>
+															D.<p class="ue" style="display: inline;">{{ test.optionD }}</p>
+														</label>
+													</li>
+											</ul>
+										</div>
+                                        </li>
+                                   {% endfor %}
+							</ul>
+						</div>
+
+                						<div class="test_content">
+							<div class="test_content_title">
+								<h2>填空题</h2>
+								<p>
+									<span>共</span><i class="content_lit">{{fill_count}}</i><span>题，</span>
+                                    <span>合计</span><i class="content_fs">{{fill_grade}}</i><span>分</span>
+								</p>
+							</div>
+						</div>
+						<div class="test_content_nr">
+							<ul>
+
+                                   {% for test in paper.fid.all %}
+                                       <li id="{{ forloop.counter }}">
+                                        <div class="test_content_nr_tt">
+											<i>{{ forloop.counter}}</i><span>({{ test.score }}分)</span>
+                                            <font>{{ test.title }}</font>
+
+										</div>
+                                       <div class="test_content_nr_main">
+
+                                                {% for n in test.count|get_range %}
+
+                                                        <label>第{{forloop.counter}}空答案
+                                                            <input type="text"  class="horizontal" name="{{test.id}}_{{forloop.counter}}" maxlength="30" >
+														</label><br>
+
+                                                {% endfor %}
+
+										</div>
+                                        </li>
+                                   {% endfor %}
+							</ul>
+						</div>
+				</form>
+			</div>
+		</div>
+
+	</div>
+	<!--nr end-->
+	<div class="foot"></div>
+</div>
+
+
+<script>
+$('.countdown').downCount({
+            date: document.getElementById('overtime').innerHTML,
+            offset: +8
+        }, function () {
+            alert('考试结束，试卷将马上收起。');
+            $('form').submit();
+        });
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Kodinger">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>在线考试系统</title>
+	<link rel="stylesheet" href="../static/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+	<link rel="stylesheet" type="text/css" href="../static/css/my-login.css">
+    <link rel="stylesheet" href="../static/css/sweetalert2.css">
+    <script src="../static/js/sweetalert2.js"></script>
+    <script src="../static/js/jquery-3.3.1.slim.min.js" ></script>
+	<script src="../static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+	<script src="../static/js/my-login.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+                swal({
+                    text: '登录成功，但需要完善信息才能激活账号',
+                    type: "warning",
+                    confirm:'ok',
+                    confirmButtonColor: '#fd7235',
+                })
+
+        })
+
+    </script>
+</head>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">学生激活</a>
+      <div>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/toIndex/">首页
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/toStudent">学生登录</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/toTeacher">教师登录</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin">管理员登陆</a>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+</nav>
+<body class="my-login-page">
+	<section class="h-100">
+		<div class="container h-100">
+			<div class="row justify-content-md-center h-100">
+				<div class="card-wrapper">
+                    <br>
+                    <br>
+					<div class="brand">
+						<img src="../static/img/logo.jpg" alt="bootstrap 4 login page">
+					</div>
+					<div class="card fat">
+						<div class="card-body">
+
+							<h5 class="card-title" >学号：{{student.id}}</h5>
+                            <h5 class="card-title">姓名：{{student.name}}</h5>
+                            <h5 class="card-title">学院：{{student.dept}}</h5>
+                            <h5 class="card-title">专业：{{student.major}}</h5>
+                            <form class="form-horizontal" action="/studentActions/" method="post">
+								<div class="form-group">
+									<label for="sex">性别</label>
+                                    <select class="form-control" name="sex">
+			                            <option>男</option>
+			                            <option>女</option>
+                                    </select>
+								</div>
+
+								<div class="form-group">
+									<label for="password">密码</label>
+									<input id="password" type="password" class="form-control " name="password" required data-eye>
+
+								</div>
+
+                                <div class="form-group">
+									<label for="email">邮箱</label>
+									<input id="email" type="email" class="form-control" name="email" required>
+
+								</div>
+
+                                <div class="form-group">
+									<label for="birth">出生日期</label>
+									<input id="bitth" type="date" class="form-control" name="birth" required>
+
+								</div>
+
+                                 <div class="form-group">
+									<label for="stuid_flag">同意考生说明以继续激活</label>
+									<input id="stuid_flag" type="radio"  name="stuid_flag" value="{{student.id}}-1" required>同意
+                                     <a href="/toDescription">考生说明</a>
+								</div>
+
+
+								<div class="form-group m-0">
+									<button type="submit" class="btn btn-primary btn-block">
+										active
+									</button>
+								</div>
+
+							</form>
+						</div>
+					</div>
+					<div class="footer">
+						Copyright &copy; 2021 &mdash; MY SYSTEM
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+</body>
+</html>
