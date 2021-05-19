@@ -49,10 +49,6 @@ def toIndex(request):
 def logOut(request):
     return redirect('/toIndex/')
 
-# 前往师生说明页
-def toDescription(request):
-    return render(request,'studentDescription.html')
-
 # 学生登陆视图函数
 # 前往学生登录页面
 def toStudent(request):
