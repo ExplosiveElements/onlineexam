@@ -7,8 +7,6 @@ from student import views
 urlpatterns = [
     #管理员登陆
     path('admin/', admin.site.urls),
-    #前往学生/老师说明
-    url(r'^toDescription/',views.toDescription),
     #学生登陆
     url(r'^toStudent/',views.toStudent),
     url(r'^studentLogin/',views.studentLogin),
