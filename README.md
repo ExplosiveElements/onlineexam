@@ -44,3 +44,5 @@
   - admin.py里为注册到admin模块展现和可以编辑的数据
   - model.py里为数据库各表的描述文件
   - view.py里为本项目所需的所有逻辑处理函数
+## LICENSE
++ MIT LICENSE
