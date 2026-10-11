@@ -6,43 +6,132 @@
   + 后端方向：Django，PyMySQL
   + 数据库方向：MySQL
   + 前端方向：Bootstrap4，Ajax，Bootstrap Table，SweetAlert2
-  + css模块：main.css,  test.css, my-login.css,  cssfamily=Varela+Round.css, Nunito.css, styles.css
-  + js模块：jquery.downCount.js， jquery.js,  echarts.min.js ,  my-login.js,  popper.min.js,  jquery.easing.min.js, scripts.js
+  + css模块：main.css, test.css, my-login.css, cssfamily=Varela+Round.css, Nunito.css, styles.css
+  + js模块：jquery.downCount.js，jquery.js, echarts.min.js, my-login.js, popper.min.js, jquery.easing.min.js, scripts.js
+
 + 具体技术
   + Django作为服务端进行逻辑处理、客户端和服务端交互连线（通过Ajax和自身模板语言实现）、与数据库交互、异常全局处理
   + PyMySQL作为连接数据库和Django交互连线
-  + Bootstrap4作为前端框架给与网页前端基本样式和动态效果
-  + Bootstrap Table作为Bootstrap插件，为前端提供更加智能和使用的表格
+  + Bootstrap4作为前端框架给予网页前端基本样式和动态效果
+  + Bootstrap Table作为Bootstrap插件，为前端提供更加智能和实用的表格
   + SweetAlert2作为弹窗插件，使网页更加具有动感，使交互更加人性化
-  + 利用main.css,  test.css, my-login.css,  cssfamily=Varela+Round.css, Nunito.css, styles.css进行前端样式设计
-  + jquery.downCount.js， jquery.js,  echarts.min.js ,  my-login.js,  popper.min.js,  jquery.easing.min.js, scripts.js进行动态效果设计
+  + 利用main.css, test.css, my-login.css, cssfamily=Varela+Round.css, Nunito.css, styles.css进行前端样式设计
+  + jquery.downCount.js，jquery.js, echarts.min.js, my-login.js, popper.min.js, jquery.easing.min.js, scripts.js进行动态效果设计
 
 ## 启动配置
 
-+ 推荐使用Intellij IDEA调试该项目(IDEA可以去官网通过学生邮箱注册学生账号，免费使用旗舰版，不要下载社区版）
-+ Python版本推荐3.7，MySQL 推荐5.7版本 ，可以去官网下载 MySQL(GPL)Python3.7（Python和PyCharm的连接以及MySQL的配置请自己百度执行）
-+ 后台启动MySQL5.7(注意记录一下MySQL账号密码）
-+ 在Github项目页面点击code，复制HTTPS的链接，在IDEA中点击File->New->Project from Version Control,在URL中输入复制的链接，点击clone
-+ 等待Github代码Pull完成，点击PyCharm左上角的File->Settings，之后,在弹出的界面中点击Project：onlineexam之后，再点击Project Interpreter，随后在点击界面中的加号。在搜索框中输入django，回车，之后，点击Specify version，随后选择版本2.2.4，之后再点击Install Package按钮即可配置Django。PyMySQL的下载同理，注意版本为1.0.2。
-+ 在Django，PyMySQL配置好后，先删除onlineexam->student->migrations中除了、__ init __.py之外的其他.py文件。随后在onlineexam->onlineexam->setting.py中的DATABASE中更改数据库配置（各个部分代表什么，文件有注释）
-+ 在配置更改完后点击右侧的Database，点击左上角的+，选择Data Source->MySQL数据库 输入数据库user和password点击OK连接
-+ 随后点击下方的Terminal，随后在其中输入 ‘mysql -u 你的数据库用户名 -p’，回车。之后输入你的密码，回车，即可进入MySQL管理界面。
-+ 在MySQL管理界面中输入‘CREATE DATABASE IF NOT EXISTS 你在setting.py中的配置的使用数据库的名称 DEFAULT CHARSET utf8;’随后输出‘exit();’即可退出MySQL管理界面
-+ 退出MySQL管理界面后，随即依次输入和执行 ‘python manage.py makemigrations’，‘ python3 manage.py migrate’ 和 ‘ python manage.py loaddata data.json’即可完成数据库的迁移和数据的导入
-+ 在数据导入后，输入‘python manage.py createsuperuser’ 按照提示即可创建超级管理员账号和密码，同时也是进入项目管理员模块的账号和密码，随后点击Terminal栏的右上角的 - 隐藏Terminal栏
-+ 点击pycharm右上角的绿色三角即可运行该项目，之后在下方点击连接即可进入界面进行操作
++ 推荐使用IntelliJ IDEA或PyCharm调试该项目。
++ 原项目推荐使用Python 3.7、Django 2.2.4、PyMySQL 1.0.2及MySQL 5.7。
++ 后台启动MySQL 5.7（注意记录MySQL账号密码）。
++ 在GitHub项目页面点击Code，复制HTTPS链接，在IDE中通过版本控制功能Clone项目。
++ 配置Python解释器，并安装Django 2.2.4和PyMySQL 1.0.2。
++ 在`onlineexam/settings.py`中的`DATABASES`配置数据库连接信息。
++ 在MySQL中创建数据库：
+
+  ```sql
+  CREATE DATABASE IF NOT EXISTS exam
+  DEFAULT CHARACTER SET utf8
+  DEFAULT COLLATE utf8_general_ci;
+  ```
+
++ 本仓库已保留原有的`student/migrations`迁移文件，无需删除或重新生成。
++ 在项目根目录依次执行：
+
+  ```bash
+  python manage.py migrate
+  python manage.py loaddata data.json
+  ```
+
++ 数据导入后，可执行以下命令创建Django管理员：
+
+  ```bash
+  python manage.py createsuperuser
+  ```
+
++ 启动项目：
+
+  ```bash
+  python manage.py runserver
+  ```
+
++ 浏览器访问：
+
+  ```
+  http://127.0.0.1:8000/
+  ```
+
+### 2026年Legacy环境兼容说明
+
+2026年10月重新恢复本项目，已验证以下运行环境：
+
+| 组件 | 版本 |
+|---|---|
+| Python | 3.9.25 |
+| Django | 2.2.4 |
+| PyMySQL | 1.0.2 |
+| MySQL | 5.7.44（Docker） |
+
+在Apple Silicon设备上，MySQL 5.7通过Docker的`linux/amd64`兼容模式运行。
+
+由于Django 2.2.4与PyMySQL 1.0.2存在SQL字符串类型兼容问题，在`onlineexam/__init__.py`中增加了Legacy Compatibility Shim：
+
+```python
+import pymysql
+
+pymysql.install_as_MySQLdb()
+
+# Legacy compatibility:
+# Django 2.2's MySQL backend expects cursor.mogrify() to return bytes,
+# while PyMySQL 1.0.2 returns str.
+from django.db.backends.mysql.operations import DatabaseOperations
+
+
+def _legacy_last_executed_query(self, cursor, sql, params):
+    query = cursor.mogrify(sql, params)
+
+    if isinstance(query, bytes):
+        query = query.decode(errors="replace")
+
+    return query
+
+
+DatabaseOperations.last_executed_query = _legacy_last_executed_query
+```
+
+该补丁通过Monkey Patch解决旧版本兼容问题，不需要修改Django安装包源码，仅用于Legacy环境恢复。
+
+**注意：**
+
++ MySQL数据库需要显式指定UTF-8字符集，以避免中文数据写入错误。
++ 保留原有`student/migrations`迁移文件，不需要重新执行`makemigrations`。
++ 数据库账号密码需根据本地环境配置，不要将真实密码提交到公开仓库。
++ 本次已验证数据库迁移、历史数据导入及项目首页正常运行，完整业务流程尚未逐一验证。
++ 后续现代化重构将在独立分支进行，本次更新不涉及业务逻辑和项目架构调整。
 
 ## 项目代码分块
 
-- 建议在二次开发项目之前系统学习Django的基础知识！！！前端看看Jquery语法和Bootstrap、Bootstap Table和sweetalert2的用法！！（参考学习网址：Bootstap Table：http://www.itxst.com/bootstrap-table-methods/tutorial.html SweetAlert2：http://mishengqiang.com/sweetalert2/#ajax-request ） 【一个免费的Bootstrap模板的网址：https://startbootstrap.com/ 】
-- onlineexam->templates存放项目中的所有html文件
-- onlineexam->static中存放项目中所有html需要引入的模块
-- onlineexam->onlineexam：
-  - setting.py为项目的配置文件
-  - urls.py中存放了客户端（前端）所需的所有url索引
-- onlineexam->student:
-  - admin.py里为注册到admin模块展现和可以编辑的数据
-  - model.py里为数据库各表的描述文件
-  - view.py里为本项目所需的所有逻辑处理函数
+- 建议在二次开发项目之前系统学习Django的基础知识！前端可以学习jQuery语法，以及Bootstrap、Bootstrap Table和SweetAlert2的用法。
+
+  参考学习网址：
+
+  + Bootstrap Table：http://www.itxst.com/bootstrap-table-methods/tutorial.html
+  + SweetAlert2：http://mishengqiang.com/sweetalert2/#ajax-request
+  + Bootstrap免费模板：https://startbootstrap.com/
+
+- `onlineexam/templates`存放项目中的所有HTML文件。
+- `onlineexam/static`存放项目中HTML需要引入的静态资源。
+
+- `onlineexam/onlineexam`：
+  - `settings.py`为项目的配置文件。
+  - `urls.py`中存放了客户端（前端）所需的URL路由配置。
+  - `__init__.py`包含PyMySQL适配及Legacy兼容补丁。
+
+- `onlineexam/student`：
+  - `admin.py`中为注册到Django Admin模块、可以展示和编辑的数据。
+  - `models.py`中为数据库各表的模型定义。
+  - `views.py`中为本项目所需的业务逻辑处理函数。
+  - `migrations/`中保留项目历史数据库迁移文件。
+
 ## LICENSE
-+ MIT LICENSE
+
+MIT LICENSE
